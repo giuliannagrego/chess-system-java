@@ -86,7 +86,8 @@ public class ChessMatch {
     }
 
     private Piece makeMove(Position source, Position target) {
-        Piece p = board.removePiece(source);
+        ChessPiece p = (ChessPiece) board.removePiece(source);
+        p.increaseMoveCount();
         Piece capturedPiece = board.removePiece(target);
         board.placePiece(p, target);
 
@@ -99,9 +100,9 @@ public class ChessMatch {
     }
 
     private void undoMove(Position source, Position target, Piece capturedPiece) {
-        Piece p = board.removePiece(target);
+        ChessPiece p = (ChessPiece) board.removePiece(target);
+        p.decreaseMoveCount();
         board.placePiece(p, source);
-
 
         if (capturedPiece != null) {
             board.placePiece(capturedPiece, target);
@@ -120,7 +121,6 @@ public class ChessMatch {
         if (!board.piece(position).isThereAnyPossibleMove()) {
             throw new ChessException("There is no possible moves for the chosen piece");
         }
-
     }
 
     private void validateTargetPosition(Position source,Position target) {
@@ -147,7 +147,6 @@ public class ChessMatch {
             }
         }
         throw new IllegalStateException("There is no " + color + " king on the board");
-
     }
 
     private boolean testCheck(Color color) {
